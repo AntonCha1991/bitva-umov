@@ -82,18 +82,30 @@ input::placeholder{color:#8597a5}
 .info-list{padding-left:22px;color:#d6e2e6}.info-list li{margin-bottom:10px}
 @media(max-width:600px){.wrap{padding:17px 13px 45px}header{gap:9px;margin-bottom:21px}.brand{font-size:13px}.pill{font-size:9px;max-width:116px;overflow:hidden;text-overflow:ellipsis}.header-actions{gap:8px}.card{padding:18px;border-radius:17px}.hero{padding:24px 20px}.names,.options{grid-template-columns:1fr}.question{margin:14px 0 19px}.scoreboard{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))}.menu-toggle{width:42px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
+
+/* App home */
+.landing{min-height:calc(100dvh - 190px);display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;padding:12px 5px 45px}
+.landing-visual{width:min(100%,470px);aspect-ratio:460/330;display:flex;justify-content:center;align-items:center;margin:0 auto 3px}
+.brain-art{display:block;width:100%;height:100%;filter:drop-shadow(0 0 22px #6583e744)}
+.landing h1{font-size:clamp(39px,9vw,59px);font-weight:870;letter-spacing:-.048em;margin:7px 0 8px}
+.landing-accent{height:4px;width:98px;border-radius:10px;background:linear-gradient(90deg,#67d7e0,#a188e3);margin:10px 0 17px}
+.landing-subtitle{font-size:13px;letter-spacing:.17em;text-transform:uppercase;color:#b3c1d3;margin:0 0 39px}
+.landing-tile{display:flex;align-items:center;gap:18px;text-align:left;width:min(100%,510px);padding:19px 22px;background:linear-gradient(110deg,#1d414e,#2c2849);color:#fff;border:1px solid #6685b6;border-radius:18px;box-shadow:0 10px 40px #090f1d55}
+.landing-tile:hover{border-color:#9bdaef;background:linear-gradient(110deg,#235365,#413462)}
+.tile-icon{font-size:33px;color:#8dd7e9;display:grid;place-items:center;width:47px}.tile-text{display:flex;flex-direction:column;flex:1;gap:2px}.tile-text b{font-size:20px}.tile-text small{font-size:13px;color:#b7cbd7}.tile-arrow{font-size:32px;color:#bbd8e6}
+.quiz-intro{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.rules-button{background:transparent;border:1px solid #506678;color:#a8d9d6;font-size:13px;font-weight:700;min-height:39px;padding:8px 12px}
+.rules-button:hover{background:#293b48}
+@media(max-width:600px){.landing{min-height:calc(100dvh - 170px);justify-content:flex-start;padding-top:20px}.landing-visual{margin-top:10px}.landing-subtitle{font-size:11px;letter-spacing:.12em;margin-bottom:32px}.landing-tile{padding:17px 16px}}
 </style></head><body><div class="overlay" id="menu-overlay" aria-hidden="true"></div>
 <aside class="sidebar" id="side-menu" aria-label="Меню игры" aria-hidden="true">
   <div class="sidebar-top"><span class="sidebar-brand">🧠 БИТВА УМОВ</span><button class="close-menu" id="close-menu" aria-label="Закрыть меню">✕</button></div>
   <div class="menu-label">Навигация</div>
   <button class="nav-link active" data-menu="home"><span class="nav-icon">⌂</span> Главная</button>
-  <button class="nav-link" data-menu="rules"><span class="nav-icon">☷</span> Правила игры</button>
-  <div class="menu-label">Скоро появится</div>
-  <button class="nav-link" disabled><span class="nav-icon">◇</span> Режимы игры</button>
-  <button class="nav-link" disabled><span class="nav-icon">▦</span> Достижения</button>
+  <button class="nav-link" data-menu="quiz"><span class="nav-icon">✦</span> Викторина</button>
   
 </aside>
-<div class="wrap"><header><a class="brand" href="./" id="home-link" aria-label="Битва умов — на главную">🧠 БИТВА УМОВ</a><div class="header-actions"><span class="pill" id="stage">ВИКТОРИНА</span><button class="menu-toggle" id="open-menu" aria-label="Открыть меню" aria-expanded="false" aria-controls="side-menu">☰</button></div></header><main id="app"></main><div class="footer">10 раундов · от 1 до 10 игроков · один телефон</div></div><script>
+<div class="wrap"><header><a class="brand" href="./" id="home-link" aria-label="Битва умов — на главную">🧠 БИТВА УМОВ</a><div class="header-actions"><span class="pill" id="stage">ВИКТОРИНА</span><button class="menu-toggle" id="open-menu" aria-label="Открыть меню" aria-expanded="false" aria-controls="side-menu">☰</button></div></header><main id="app"></main><div class="footer" id="footer">Битва умов</div></div><script>
 (()=>{
 'use strict';
 const $=s=>document.querySelector(s);const app=$('#app');const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -109,15 +121,35 @@ const questions=[
  ['Спорт','Как называется гонка, состоящая из плавания, велоэтапа и бега?',['Дуатлон','Триатлон','Пентатлон','Декатлон'],1,'Триатлон объединяет три дисциплины в указанном порядке. Между этапами участники проходят транзитные зоны.','triathlon swimming cycling running'],
  ['Забавный факт','У какого животного три сердца?',['Осьминог','Дельфин','Пингвин','Акула'],0,'У осьминога два сердца направляют кровь через жабры, а третье — по остальному телу. Это помогает обеспечивать кислородом его органы.','octopus underwater']
 ];
-let players=[''],scores=[],round=0,order=[],answers=[],risks=[],turn=0,seconds=30,timer=null,screen='start',lastFirst=-1,locked=false;
+let players=[''],scores=[],round=0,order=[],answers=[],risks=[],turn=0,seconds=30,timer=null,screen='landing',lastFirst=-1,locked=false;
 const stop=()=>{if(timer){clearInterval(timer);timer=null}};
 const setStage=t=>$('#stage').textContent=t;
 function button(txt,action,cls='primary'){return `<button class="${cls}" data-action="${action}">${txt}</button>`}
 function heading(title,desc=''){return `<div class="card hero"><div class="badge">✦ ВЕЧЕР ИНТЕЛЛЕКТУАЛЬНЫХ ПОЕДИНКОВ</div><h1>${title}</h1>${desc?`<div class="hint">${desc}</div>`:''}</div>`}
 function scoreHtml(){const max=Math.max(...scores,0);return `<div class="scoreboard">${players.map((p,i)=>`<div class="score ${scores[i]===max&&max>0?'leader':''}"><span>${escapeHtml(p)}</span><b>${scores[i]}</b><small>очков</small></div>`).join('')}</div>`}
 function strip(){return `<div class="round-strip">${Array.from({length:10},(_,i)=>`<span class="${i<round?'past':i===round?'active':''}"></span>`).join('')}</div>`}
-function home(){screen='start';setStage('НАСТРОЙКА');stop();app.innerHTML=heading('Битва умов','10 раундов · 4 ответа · 30 секунд каждому · режим «РИСК»')+`<div class="card"><h2>Игроки</h2><p class="hint">Можно играть одному или компанией до 10 человек. Введите имя каждого участника.</p><div class="names" id="player-names">${players.map((p,i)=>`<label>Игрок ${i+1}<input data-name="${i}" maxlength="24" autocomplete="off" placeholder="Введите имя" value="${escapeHtml(p)}"></label>`).join('')}</div><button class="secondary add-player" data-action="add-player" ${players.length>=10?'disabled':''}>+ Добавить игрока ${players.length}/10</button><p class="muted">Нечётные раунды — обычные (+10 за ответ). В чётных можно рискнуть: победа удваивает накопленное и добавляет 10, ошибка обнуляет очки.</p>${button('Начать игру →','start')}</div>`}
-function addPlayer(){if(screen!=='start'||players.length>=10)return;players=[...document.querySelectorAll('[data-name]')].map(e=>e.value);players.push('');home();const fields=[...document.querySelectorAll('[data-name]')];fields[fields.length-1]?.focus()}
+function home(){stop();screen='landing';setStage('ГЛАВНАЯ');$('#footer').textContent='Битва умов';app.innerHTML=`<section class="landing"><div class="landing-visual"><svg class="brain-art" viewBox="0 0 460 330" role="img" aria-label="Стилизованный светящийся нейромозг" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="brainStroke" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7ce3e3"/><stop offset=".55" stop-color="#94a1ff"/><stop offset="1" stop-color="#d18ce7"/></linearGradient><radialGradient id="brainGlow"><stop stop-color="#88c9db" stop-opacity=".30"/><stop offset="1" stop-color="#496ac7" stop-opacity="0"/></radialGradient><filter id="softGlow"><feGaussianBlur stdDeviation="4"/></filter></defs>
+<ellipse cx="230" cy="163" rx="206" ry="150" fill="url(#brainGlow)"/>
+<path d="M229 74 C204 40 156 49 145 71 C95 54 64 100 78 130 C41 164 67 218 105 222 C114 261 162 267 186 250 C207 271 230 256 230 230 C230 182 229 115 229 74 Z" fill="#203a55" fill-opacity=".65" stroke="url(#brainStroke)" stroke-width="3.2" stroke-linejoin="round"/>
+<path d="M231 74 C253 42 310 50 325 77 C370 59 400 102 386 132 C426 160 399 219 365 225 C353 263 309 264 285 249 C264 268 232 256 231 230 Z" fill="#282e58" fill-opacity=".62" stroke="url(#brainStroke)" stroke-width="3.2" stroke-linejoin="round"/>
+<path d="M230 231 Q224 269 245 299 Q255 306 269 297 Q259 281 265 245" fill="#253f57" stroke="#91b6da" stroke-width="3"/>
+<g fill="none" stroke="url(#brainStroke)" stroke-width="2.8" stroke-linecap="round" opacity=".9">
+<path d="M144 71 Q127 93 152 111 Q126 133 156 150 Q122 175 148 199 Q139 223 174 243"/>
+<path d="M104 103 Q128 95 130 126 Q94 147 114 168 Q82 189 107 219"/>
+<path d="M178 72 Q157 95 181 115 Q164 140 190 160 Q170 187 190 212 Q181 236 207 245"/>
+<path d="M214 88 Q195 105 216 132 Q192 153 215 178 Q199 205 228 226"/>
+<path d="M285 72 Q304 93 284 117 Q308 141 283 163 Q303 188 283 216 Q297 240 279 249"/>
+<path d="M331 86 Q310 106 331 129 Q304 154 331 175 Q312 201 344 226"/>
+<path d="M378 134 Q348 143 355 168 Q336 190 363 223"/>
+<path d="M250 91 Q271 115 250 137 Q271 163 252 185 Q268 210 241 234"/>
+</g><g stroke="#a0e8ef" stroke-opacity=".55" stroke-width="1.5"><path d="M117 148 177 111 215 178 284 163 336 197"/><path d="M153 202 191 160 253 185 332 130"/><path d="M176 242 215 178 253 137 300 96"/></g>
+<g fill="#b5fbff"><circle cx="117" cy="148" r="5"/><circle cx="177" cy="111" r="5"/><circle cx="215" cy="178" r="6"/><circle cx="284" cy="163" r="6"/><circle cx="336" cy="197" r="5"/><circle cx="153" cy="202" r="5"/><circle cx="253" cy="137" r="4"/></g>
+<g filter="url(#softGlow)" fill="#a6f6ff" opacity=".7"><circle cx="117" cy="148" r="9"/><circle cx="215" cy="178" r="11"/><circle cx="284" cy="163" r="10"/></g></svg></div><h1>Битва умов</h1><div class="landing-accent"></div><p class="landing-subtitle">Интеллектуальные игры и задания</p><button class="landing-tile" data-action="open-quiz"><span class="tile-icon">✦</span><span class="tile-text"><b>Викторина</b><small>Проверь свои знания</small></span><span class="tile-arrow">›</span></button></section>`;highlightMenu('home')}
+function highlightMenu(where){document.querySelectorAll('[data-menu]').forEach(el=>el.classList.toggle('active',el.dataset.menu===where))}
+function quizSetup(){stop();screen='start';setStage('ВИКТОРИНА');$('#footer').textContent='10 раундов · от 1 до 10 игроков';highlightMenu('quiz');app.innerHTML=heading('Викторина','10 раундов · 4 ответа · 30 секунд · режим «РИСК»')+`<div class="card"><div class="quiz-intro"><h2>Участники</h2><button class="rules-button" data-action="rules">Правила игры ⓘ</button></div><p class="hint">Можно играть одному или компанией до 10 человек.</p><div class="names" id="player-names">${players.map((p,i)=>`<label>Игрок ${i+1}<input data-name="${i}" maxlength="24" autocomplete="off" placeholder="Введите имя" value="${escapeHtml(p)}"></label>`).join('')}</div><button class="secondary add-player" data-action="add-player" ${players.length>=10?'disabled':''}>+ Добавить игрока ${players.length}/10</button>${button('Начать игру →','start','primary wide')}</div>`}
+
+function addPlayer(){if(screen!=='start'||players.length>=10)return;players=[...document.querySelectorAll('[data-name]')].map(e=>e.value);players.push('');quizSetup();const fields=[...document.querySelectorAll('[data-name]')];fields[fields.length-1]?.focus()}
 
 function init(){const inputs=[...document.querySelectorAll('[data-name]')];const entered=inputs.map(e=>e.value.trim());const missing=entered.findIndex(v=>!v);if(missing!==-1){inputs[missing].focus();inputs[missing].setAttribute('aria-invalid','true');alert('Введите имя игрока '+(missing+1));return}players=entered;scores=players.map(()=>0);round=0;lastFirst=-1;startRound()}
 function randomOrder(){if(players.length===1)return [0];let first=Math.floor(Math.random()*players.length);if(first===lastFirst)first=(first+1+Math.floor(Math.random()*(players.length-1)))%players.length;lastFirst=first;return Array.from({length:players.length},(_,i)=>(first+i)%players.length)}
@@ -134,12 +166,13 @@ const img=$('#topic-photo'), info=$('#img-info');fetch('https://en.wikipedia.org
 function finish(){stop();screen='finish';setStage('ФИНАЛ');const ranking=players.map((p,i)=>({p,score:scores[i]})).sort((a,b)=>b.score-a.score);const top=ranking[0].score;app.innerHTML=heading('🏆 Игра окончена!','Все 10 раундов позади. Вот итоговый зачёт.')+`<div class="card center"><div style="font-size:52px">🏆</div><h2>${escapeHtml(ranking.filter(r=>r.score===top).map(r=>r.p).join(' и '))}</h2><p class="hint">${top} очков — лучший результат</p></div><div class="card">${ranking.map((r,i)=>`<div class="rule">${i+1}. <b>${escapeHtml(r.p)}</b> — ${r.score} очков</div>`).join('')}</div>${button('Сыграть ещё','reset')}`}
 const sideMenu=$('#side-menu'),overlay=$('#menu-overlay'),openMenuBtn=$('#open-menu');
 function toggleMenu(open){document.body.classList.toggle('menu-open',open);openMenuBtn.setAttribute('aria-expanded',String(open));sideMenu.setAttribute('aria-hidden',String(!open));if(open)$('#close-menu').focus();else openMenuBtn.focus()}
-function goHome(){if(screen!=='start'&&!confirm('Вернуться на главную? Текущая игра начнётся заново.'))return false;players=[''];home();window.scrollTo(0,0);return true}
-function rulesPage(){if(screen!=='start'&&!confirm('Открыть правила? Текущая игра начнётся заново.'))return;stop();screen='rules';setStage('ПРАВИЛА');app.innerHTML=heading('Как играть','Коротко о механике «Битвы умов»')+`<div class="card"><h2>Правила</h2><ol class="info-list"><li>Введите от одного до десяти имён и нажмите «Начать игру».</li><li>В каждом из десяти раундов каждый игрок отвечает на вопрос с четырьмя вариантами.</li><li>На ответ даётся 30 секунд. Правильный ответ приносит 10 очков.</li><li>В чётных раундах доступен «РИСК»: при успехе очки удваиваются и добавляется 10, при ошибке счёт обнуляется.</li><li>После раунда открываются ответы, а в финале — итоговый счёт.</li></ol>${button('Перейти к игре →','reset')}</div>`;window.scrollTo(0,0)}
+function goHome(){if(['ready','question','result'].includes(screen)&&!confirm('Вернуться на главную? Текущая игра начнётся заново.'))return false;stop();players=[''];home();window.scrollTo(0,0);return true}
+function openQuiz(){if(['ready','question','result'].includes(screen)&&!confirm('Открыть настройки викторины? Текущая игра начнётся заново.'))return false;stop();players=[''];quizSetup();window.scrollTo(0,0);return true}
+function rulesPage(){if(['ready','question','result'].includes(screen)&&!confirm('Открыть правила? Текущая игра начнётся заново.'))return;stop();screen='rules';setStage('ПРАВИЛА');highlightMenu('quiz');app.innerHTML=heading('Правила викторины','')+`<div class="card"><h2>Как играть</h2><ol class="info-list"><li>Введите от одного до десяти имён и начните игру.</li><li>Игра состоит из десяти раундов. В каждом — четыре варианта ответа.</li><li>На ответ даётся 30 секунд. Верный ответ приносит 10 очков.</li><li>В чётных раундах можно выбрать «РИСК»: правильный ответ удваивает очки и добавляет 10, ошибка обнуляет счёт.</li><li>После раунда показываются ответы, а в конце — общий результат.</li></ol>${button('К настройке викторины','quiz-setup')}</div>`;window.scrollTo(0,0)}
 openMenuBtn.addEventListener('click',()=>toggleMenu(true));$('#close-menu').addEventListener('click',()=>toggleMenu(false));overlay.addEventListener('click',()=>toggleMenu(false));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('menu-open'))toggleMenu(false)});
-sideMenu.addEventListener('click',e=>{const btn=e.target.closest('[data-menu]');if(!btn)return;const a=btn.dataset.menu;toggleMenu(false);if(a==='home')goHome();if(a==='rules')rulesPage()});
-document.querySelector('#home-link').addEventListener('click',e=>{e.preventDefault();goHome()});app.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const a=b.dataset.action;if(a==='add-player')addPlayer();if(a==='start')init();if(a==='reset')home();if(a==='no-risk'){risks[current()]=false;const el=$('#risk-choice');if(el)el.textContent='Выбрано: без риска'}if(a==='take-risk'){risks[current()]=true;const el=$('#risk-choice');if(el)el.textContent='Выбрано: ⚡ РИСК'}if(a==='answer-ready'&&screen==='ready')showQuestion();if(a==='answer'&&screen==='question')submit(Number(b.dataset.choice));if(a==='next-round'&&screen==='result'){round++;if(round===10)finish();else startRound()}});
+sideMenu.addEventListener('click',e=>{const btn=e.target.closest('[data-menu]');if(!btn)return;const a=btn.dataset.menu;toggleMenu(false);if(a==='home')goHome();if(a==='quiz')openQuiz()});
+document.querySelector('#home-link').addEventListener('click',e=>{e.preventDefault();goHome()});app.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const a=b.dataset.action;if(a==='open-quiz')openQuiz();if(a==='quiz-setup')quizSetup();if(a==='rules')rulesPage();if(a==='add-player')addPlayer();if(a==='start')init();if(a==='reset')quizSetup();if(a==='no-risk'){risks[current()]=false;const el=$('#risk-choice');if(el)el.textContent='Выбрано: без риска'}if(a==='take-risk'){risks[current()]=true;const el=$('#risk-choice');if(el)el.textContent='Выбрано: ⚡ РИСК'}if(a==='answer-ready'&&screen==='ready')showQuestion();if(a==='answer'&&screen==='question')submit(Number(b.dataset.choice));if(a==='next-round'&&screen==='result'){round++;if(round===10)finish();else startRound()}});
 window.addEventListener('pagehide',stop);home();
 })();
 </script></body></html>
