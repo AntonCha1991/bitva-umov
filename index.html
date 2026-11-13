@@ -97,6 +97,15 @@ input::placeholder{color:#8597a5}
 .rules-button{background:transparent;border:1px solid #506678;color:#a8d9d6;font-size:13px;font-weight:700;min-height:39px;padding:8px 12px}
 .rules-button:hover{background:#293b48}
 @media(max-width:600px){.landing{min-height:calc(100dvh - 170px);justify-content:flex-start;padding-top:20px}.landing-visual{margin-top:10px}.landing-subtitle{font-size:11px;letter-spacing:.12em;margin-bottom:32px}.landing-tile{padding:17px 16px}}
+
+/* On the app landing screen, show only the brain, title, subtitle and navigation menu. */
+body.landing-page header{justify-content:flex-end;border-bottom:0;margin-bottom:0;padding-bottom:0}
+body.landing-page header .brand,
+body.landing-page header .pill,
+body.landing-page .landing-tile,
+body.landing-page .footer{display:none}
+body.landing-page .header-actions{margin-left:auto}
+body.landing-page .landing{min-height:calc(100dvh - 115px);padding-bottom:30px}
 </style></head><body><div class="overlay" id="menu-overlay" aria-hidden="true"></div>
 <aside class="sidebar" id="side-menu" aria-label="Меню игры" aria-hidden="true">
   <div class="sidebar-top"><span class="sidebar-brand">🧠 БИТВА УМОВ</span><button class="close-menu" id="close-menu" aria-label="Закрыть меню">✕</button></div>
@@ -128,7 +137,7 @@ function button(txt,action,cls='primary'){return `<button class="${cls}" data-ac
 function heading(title,desc=''){return `<div class="card hero"><div class="badge">✦ ВЕЧЕР ИНТЕЛЛЕКТУАЛЬНЫХ ПОЕДИНКОВ</div><h1>${title}</h1>${desc?`<div class="hint">${desc}</div>`:''}</div>`}
 function scoreHtml(){const max=Math.max(...scores,0);return `<div class="scoreboard">${players.map((p,i)=>`<div class="score ${scores[i]===max&&max>0?'leader':''}"><span>${escapeHtml(p)}</span><b>${scores[i]}</b><small>очков</small></div>`).join('')}</div>`}
 function strip(){return `<div class="round-strip">${Array.from({length:10},(_,i)=>`<span class="${i<round?'past':i===round?'active':''}"></span>`).join('')}</div>`}
-function home(){stop();screen='landing';setStage('ГЛАВНАЯ');$('#footer').textContent='Битва умов';app.innerHTML=`<section class="landing"><div class="landing-visual"><svg class="brain-art" viewBox="0 0 460 330" role="img" aria-label="Стилизованный светящийся нейромозг" xmlns="http://www.w3.org/2000/svg">
+function home(){stop();document.body.classList.add('landing-page');screen='landing';setStage('ГЛАВНАЯ');$('#footer').textContent='Битва умов';app.innerHTML=`<section class="landing"><div class="landing-visual"><svg class="brain-art" viewBox="0 0 460 330" role="img" aria-label="Стилизованный светящийся нейромозг" xmlns="http://www.w3.org/2000/svg">
 <defs><linearGradient id="brainStroke" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7ce3e3"/><stop offset=".55" stop-color="#94a1ff"/><stop offset="1" stop-color="#d18ce7"/></linearGradient><radialGradient id="brainGlow"><stop stop-color="#88c9db" stop-opacity=".30"/><stop offset="1" stop-color="#496ac7" stop-opacity="0"/></radialGradient><filter id="softGlow"><feGaussianBlur stdDeviation="4"/></filter></defs>
 <ellipse cx="230" cy="163" rx="206" ry="150" fill="url(#brainGlow)"/>
 <path d="M229 74 C204 40 156 49 145 71 C95 54 64 100 78 130 C41 164 67 218 105 222 C114 261 162 267 186 250 C207 271 230 256 230 230 C230 182 229 115 229 74 Z" fill="#203a55" fill-opacity=".65" stroke="url(#brainStroke)" stroke-width="3.2" stroke-linejoin="round"/>
@@ -147,7 +156,7 @@ function home(){stop();screen='landing';setStage('ГЛАВНАЯ');$('#footer').
 <g fill="#b5fbff"><circle cx="117" cy="148" r="5"/><circle cx="177" cy="111" r="5"/><circle cx="215" cy="178" r="6"/><circle cx="284" cy="163" r="6"/><circle cx="336" cy="197" r="5"/><circle cx="153" cy="202" r="5"/><circle cx="253" cy="137" r="4"/></g>
 <g filter="url(#softGlow)" fill="#a6f6ff" opacity=".7"><circle cx="117" cy="148" r="9"/><circle cx="215" cy="178" r="11"/><circle cx="284" cy="163" r="10"/></g></svg></div><h1>Битва умов</h1><div class="landing-accent"></div><p class="landing-subtitle">Интеллектуальные игры и задания</p><button class="landing-tile" data-action="open-quiz"><span class="tile-icon">✦</span><span class="tile-text"><b>Викторина</b><small>Проверь свои знания</small></span><span class="tile-arrow">›</span></button></section>`;highlightMenu('home')}
 function highlightMenu(where){document.querySelectorAll('[data-menu]').forEach(el=>el.classList.toggle('active',el.dataset.menu===where))}
-function quizSetup(){stop();screen='start';setStage('ВИКТОРИНА');$('#footer').textContent='10 раундов · от 1 до 10 игроков';highlightMenu('quiz');app.innerHTML=heading('Викторина','10 раундов · 4 ответа · 30 секунд · режим «РИСК»')+`<div class="card"><div class="quiz-intro"><h2>Участники</h2><button class="rules-button" data-action="rules">Правила игры ⓘ</button></div><p class="hint">Можно играть одному или компанией до 10 человек.</p><div class="names" id="player-names">${players.map((p,i)=>`<label>Игрок ${i+1}<input data-name="${i}" maxlength="24" autocomplete="off" placeholder="Введите имя" value="${escapeHtml(p)}"></label>`).join('')}</div><button class="secondary add-player" data-action="add-player" ${players.length>=10?'disabled':''}>+ Добавить игрока ${players.length}/10</button>${button('Начать игру →','start','primary wide')}</div>`}
+function quizSetup(){stop();document.body.classList.remove('landing-page');screen='start';setStage('ВИКТОРИНА');$('#footer').textContent='10 раундов · от 1 до 10 игроков';highlightMenu('quiz');app.innerHTML=heading('Викторина','10 раундов · 4 ответа · 30 секунд · режим «РИСК»')+`<div class="card"><div class="quiz-intro"><h2>Участники</h2><button class="rules-button" data-action="rules">Правила игры ⓘ</button></div><p class="hint">Можно играть одному или компанией до 10 человек.</p><div class="names" id="player-names">${players.map((p,i)=>`<label>Игрок ${i+1}<input data-name="${i}" maxlength="24" autocomplete="off" placeholder="Введите имя" value="${escapeHtml(p)}"></label>`).join('')}</div><button class="secondary add-player" data-action="add-player" ${players.length>=10?'disabled':''}>+ Добавить игрока ${players.length}/10</button>${button('Начать игру →','start','primary wide')}</div>`}
 
 function addPlayer(){if(screen!=='start'||players.length>=10)return;players=[...document.querySelectorAll('[data-name]')].map(e=>e.value);players.push('');quizSetup();const fields=[...document.querySelectorAll('[data-name]')];fields[fields.length-1]?.focus()}
 
